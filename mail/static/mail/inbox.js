@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // By default, load the inbox
   load_mailbox('inbox');
+
+  // Define what to do with JS to compose-form
+  document.querySelector('#compose-form').onsubmit = send_email
+
 });
 
 function compose_email() {
@@ -30,4 +34,33 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+}
+
+
+function send_email() {
+  // Get the data from the form
+  const recipients = document.querySelector('#compose-recipients').value
+  const subject = document.querySelector('#compose-subject').value
+  const body = document.querySelector('#compose-body').value
+  console.log(`Data read: ${recipients} ${subject} ${body}`)
+
+  fetch('/emails', {
+    method: 'POST',
+    body: JSON.stringify({
+        recipients: recipients,
+        subject: subject,
+        body: body
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+      // Print result
+      console.log(result);
+  });
+
+  // Load the user's sent mailbox
+  load_mailbox('sent');
+
+  // I need the form not to reload the page
+  return false
 }
