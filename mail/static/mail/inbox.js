@@ -34,6 +34,36 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // Query the API for the lastest emails in the mailbox
+  const apy_query = `/emails/${mailbox}`
+  fetch(apy_query)
+  .then(response => response.json())
+  .then(emails => {
+      emails.forEach(email => {
+        id = email.id
+        sender = email.sender
+        recipients = email.recipients
+        subject = email.subject
+        body = email.body
+        timestamp = email.timestamp
+        read = email.read
+        archived = email.archived
+
+        // Create a <div> to show the data
+        const email_frame = document.createElement('div')
+        email_frame.innerHTML = `${sender} ${subject} ${timestamp}`
+        // Do some fancy styling to the email_frame
+        email_frame.className = 'email_frame'
+        
+
+        // Add a click handler to the email_frame
+
+        // Append the <div> to the body
+        document.querySelector('#emails-view').append(email_frame)
+      });
+  });
+
 }
 
 
