@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+  // Add a werid second mailbox name to the top of the page just in case
+  weird_double_mailbox_name = document.createElement('h3')
+  weird_double_mailbox_name.setAttribute('id', 'weird_double_mailbox_name')
+  document.querySelector('body').insertBefore(weird_double_mailbox_name, document.querySelector('body').firstChild)
+
   // Use buttons to toggle between views
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
@@ -19,6 +24,9 @@ function compose_email() {
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
+  // Hide weird double mailbox name
+  document.querySelector('#weird_double_mailbox_name').style.display = 'none';
+  document.querySelector('title').innerHTML = 'Mail'
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
@@ -32,8 +40,16 @@ function load_mailbox(mailbox) {
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
 
+  capitalized_mailbox_name = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}`
   // Show the mailbox name
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  document.querySelector('#emails-view').innerHTML = `<h3>${capitalized_mailbox_name}</h3>`;
+
+  // Add the name of the mailbox to the top of the page Whatever that means
+  document.querySelector('title').innerHTML = capitalized_mailbox_name
+  // Just in case it doen't mean add it to the title but to the top of the body
+  weird_double_mailbox_name = document.querySelector('#weird_double_mailbox_name')
+  weird_double_mailbox_name.innerHTML = capitalized_mailbox_name
+  weird_double_mailbox_name.style.display = 'block';
 
   // Query the API for the lastest emails in the mailbox
   const apy_query = `/emails/${mailbox}`
