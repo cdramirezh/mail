@@ -50,13 +50,24 @@ function load_mailbox(mailbox) {
         read = email.read
         archived = email.archived
 
-        // Create a <div> to show the data
-        const email_frame = document.createElement('div')
-        email_frame.innerHTML = `${sender} ${subject} ${timestamp}`
-        // Do some fancy styling to the email_frame
-        email_frame.className = 'email_frame'
+        // Create frames to show the data
         
+        const sender_frame = document.createElement('div')
+        sender_frame.classList.add('col-2', 'sender_frame')
+        sender_frame.innerHTML = sender
 
+        const subject_frame = document.createElement('div')
+        subject_frame.classList.add('col-7')
+        subject_frame.innerHTML = subject
+
+        const timestamp_frame = document.createElement('div')
+        timestamp_frame.classList.add('col-3', 'timestamp_frame', 'text-muted')
+        timestamp_frame.innerHTML = timestamp
+
+        const email_frame = document.createElement('div')
+        email_frame.classList.add('row', 'email_frame')
+        email_frame.append(sender_frame, subject_frame, timestamp_frame)
+        
         // Add a click handler to the email_frame
 
         // Append the <div> to the body

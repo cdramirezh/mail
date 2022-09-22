@@ -6,3 +6,11 @@ textarea {
     border: 2px solid black;
     padding: 5px;
 }
+
+.sender_frame {
+    font-weight: bold;
+}
+
+.timestamp_frame {
+    text-align: right;
+}
