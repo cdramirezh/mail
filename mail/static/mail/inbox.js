@@ -67,7 +67,7 @@ function load_mailbox(mailbox) {
         archived = email.archived
 
         // Create frames to show the data
-        
+
         const sender_frame = document.createElement('div')
         sender_frame.classList.add('col-2', 'sender_frame')
         sender_frame.innerHTML = sender
@@ -77,12 +77,15 @@ function load_mailbox(mailbox) {
         subject_frame.innerHTML = subject
 
         const timestamp_frame = document.createElement('div')
-        timestamp_frame.classList.add('col-3', 'timestamp_frame', 'text-muted')
+        timestamp_frame.classList.add('col-3', 'timestamp_frame')
         timestamp_frame.innerHTML = timestamp
 
         const email_frame = document.createElement('div')
         email_frame.classList.add('row', 'email_frame')
         email_frame.append(sender_frame, subject_frame, timestamp_frame)
+
+        // If email is read, it appears with a gray background
+        if (read) {email_frame.style.background = 'gray'}
         
         // Add a click handler to the email_frame
 
