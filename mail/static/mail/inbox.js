@@ -95,7 +95,7 @@ function load_mailbox(mailbox) {
         if (read) {email_frame.style.background = 'gray'}
         
         // Add a click handler to the email_frame
-        email_frame.addEventListener('click', function () {click_email(this.dataset.id)})
+        email_frame.addEventListener('click', function () {click_email(this.dataset.id, mailbox)})
 
         // Append the <div> to the body
         document.querySelector('#emails-view').append(email_frame)
@@ -133,7 +133,7 @@ function send_email() {
   return false
 }
 
-function click_email(id) {
+function click_email(id, mailbox) {
   query = `/emails/${id}`
   fetch(query)
   .then(response => response.json())
@@ -163,6 +163,18 @@ function click_email(id) {
     const body_frame = document.createElement('p')
     body_frame.innerHTML = email.body
 
+    const archive_toggler = document.createElement('button')
+    archive_text = ''
+    if (mailbox == 'inbox') {archive_text = 'Archive'}
+    if (mailbox == 'archive') {archive_text = 'Unarchive'}
+    if (mailbox != 'sent' && archive_text) {
+      archive_toggler.innerHTML = archive_text
+      archive_toggler.classList.add('btn', 'btn-sm', 'btn-outline-primary')
+      archive_toggler.addEventListener('click', () => {toggle_archive(email.id, email.archived)})
+      document.querySelector('#individual-email-view').append(archive_toggler)  
+    }
+    
+
     hr = document.createElement('hr')
     document.querySelector('#individual-email-view').append(sender_frame, recipients_frame, timestamp_frame, hr, body_frame)
 
@@ -176,4 +188,16 @@ function click_email(id) {
     })
   })
   
+}
+
+function toggle_archive(id, archived) {
+
+  query = `/emails/${id}`
+  fetch(query, {
+    method: 'PUT',
+    body: JSON.stringify({
+        archived: !archived
+    })
+  })
+  .then(()=> {load_mailbox('inbox')})
 }
