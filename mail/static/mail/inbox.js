@@ -124,10 +124,13 @@ function send_email() {
   .then(result => {
       // Print result
       console.log(result);
+      /* 
+      I put the load_mailbox function here
+      because sometimes the mailbox would be loaded BEFORE the email was actually sent,
+      so the email would not apper in the mailbox
+     */
+      load_mailbox('sent')
   });
-
-  // Load the user's sent mailbox
-  load_mailbox('sent');
 
   // I need the form not to reload the page
   return false
@@ -174,9 +177,14 @@ function click_email(id, mailbox) {
       document.querySelector('#individual-email-view').append(archive_toggler)  
     }
     
+    // Create button to reply
+    const reply = document.createElement('button')
+    reply.innerHTML = 'Reply'
+    reply.classList.add('btn', 'btn-sm', 'btn-outline-primary')
+    reply.addEventListener('click', () => {reply_email(email.sender, email.subject, email.timestamp, email.body)})
 
     hr = document.createElement('hr')
-    document.querySelector('#individual-email-view').append(sender_frame, recipients_frame, timestamp_frame, hr, body_frame)
+    document.querySelector('#individual-email-view').append(sender_frame, recipients_frame, subject_frame, timestamp_frame, reply, hr, body_frame)
 
   });  
 
@@ -200,4 +208,18 @@ function toggle_archive(id, archived) {
     })
   })
   .then(()=> {load_mailbox('inbox')})
+}
+
+function reply_email(recipient, subject, timestamp, body) {
+  
+  compose_email()
+  document.querySelector('#compose-recipients').value = recipient
+  // Check if subject begins with 'Re: '
+  console.log(subject.slice(0,4))
+  if ( subject.slice(0,4) === 'Re: ' ){
+    document.querySelector('#compose-subject').value = subject
+  } else {
+    document.querySelector('#compose-subject').value = `Re: ${subject}`
+  }
+  document.querySelector('#compose-body').value = `On ${timestamp} ${recipient} wrote: ${body}`
 }
