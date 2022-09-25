@@ -1,10 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-  // Add a werid second mailbox name to the top of the page just in case
-  weird_double_mailbox_name = document.createElement('h3')
-  weird_double_mailbox_name.setAttribute('id', 'weird_double_mailbox_name')
-  document.querySelector('body').insertBefore(weird_double_mailbox_name, document.querySelector('body').firstChild)
-
   // Use buttons to toggle between views
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
@@ -25,10 +20,6 @@ function compose_email() {
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
   document.querySelector('#individual-email-view').style.display = 'none';
-  
-  // Hide weird double mailbox name
-  document.querySelector('#weird_double_mailbox_name').style.display = 'none';
-  document.querySelector('title').innerHTML = 'Mail'
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
@@ -47,12 +38,8 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${capitalized_mailbox_name}</h3>`;
 
-  // Add the name of the mailbox to the top of the page Whatever that means
+  // Add the name of the mailbox to the title
   document.querySelector('title').innerHTML = capitalized_mailbox_name
-  // Just in case it doen't mean add it to the title but to the top of the body
-  weird_double_mailbox_name = document.querySelector('#weird_double_mailbox_name')
-  weird_double_mailbox_name.innerHTML = capitalized_mailbox_name
-  weird_double_mailbox_name.style.display = 'block';
 
   // Query the API for the lastest emails in the mailbox
   const apy_query = `/emails/${mailbox}`
@@ -87,7 +74,7 @@ function load_mailbox(mailbox) {
         email_frame.classList.add('row', 'email_frame')
         // Set a data attribute to access the id of the email
         // Because when I pass the id directly to the function,
-        // then all the div listers end up using the last emails' id
+        // then all the div listers end up using the ID of the last email
         email_frame.setAttribute('data-id', id)
         email_frame.append(sender_frame, subject_frame, timestamp_frame)
 
